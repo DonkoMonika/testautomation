@@ -1,1 +1,8 @@
 valami12
+
+ ///accept gomb: html/body/div[5]/div/div[3]/button[2]
+
+
+        //  |elsocim        |masodikcim     |
+      //    |"Kacsa utca"   |"Selyem utca"  |
+      //    |""             | ""            |
