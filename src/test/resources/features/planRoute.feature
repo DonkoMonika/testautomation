@@ -12,4 +12,5 @@ Feature: The user wants to plan a route
         Then calculated route is shown
           |elsocim        |masodikcim     |
           |"Kacsa utca"   |"Selyem utca"  |
+          |""             | ""            |
 
