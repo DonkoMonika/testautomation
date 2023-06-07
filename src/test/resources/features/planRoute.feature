@@ -13,8 +13,8 @@ Feature: The user wants to plan a route
       Then calculated route is shown
 
       Examples:
-        |elsocim        |masodikcim     |
-        |Oktogon        |Budafok        |
-
+        | elsocim    | masodikcim  |
+        | Oktogon    | Budafok     |
+        | Kacsa utca | Selyem utca |
 
 

@@ -1,3 +1,5 @@
+package steps;
+
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
@@ -11,7 +13,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.io.InputStream;
 import java.time.Duration;
 import java.util.Properties;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class routePlanningSteps {
@@ -39,24 +41,25 @@ public class routePlanningSteps {
         // set chrome options
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments(props.getProperty("chrome.arguments"));
-        chromeOptions.setHeadless(true);
+        // chromeOptions.setHeadless(true);
 
         // init driver
         driver = new ChromeDriver(chromeOptions);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(50));
 
         driver.manage().window().setSize(new Dimension(900, 900)); // ...selenium.Dimension
     }
 
-    @After
-    public static void cleanup() {
-        driver.quit();
-    }
+    // @After
+    // public static void cleanup() {
+    //    driver.quit();
+    //}
 
     @Given("page open")
     public void pageOpen() {
         driver.get("https://go.bkk.hu");
     }
+
     @And("cookies accepted")
     public void cookiesAccepted() {
         WebElement acceptButton = wait.until(driver -> driver.findElement(By.xpath("/html/body/div[5]/div/div[3]/button[2]")));
@@ -66,32 +69,29 @@ public class routePlanningSteps {
     @Given("address A is {string}")
     public void addressAIs(String addressA) {
         WebElement inputAddressA = driver.findElement(By.cssSelector("#panel-context-view > div > form > div:nth-child(1) > table > tbody > tr:nth-child(1) > td.planner-from-to > input"));
-//                WebElement inputAddressA;
         inputAddressA.sendKeys(addressA);
-        // #panel-context-view > div > form > div:nth-child(1) > table > tbody > tr:nth-child(1) > td.planner-from-to > input
     }
+
 
     @And("address B is {string}")
     public void addressBIs(String addressB) {
         WebElement inputAddressB = driver.findElement(By.cssSelector("#panel-context-view > div > form > div:nth-child(1) > table > tbody > tr:nth-child(2) > td.planner-from-to > input"));
-      //      WebElement inputAddressB;
         inputAddressB.sendKeys(addressB);
-
-                // #panel-context-view > div > form > div:nth-child(1) > table > tbody > tr:nth-child(2) > td.planner-from-to > input
+        inputAddressB.click();
     }
 
     @When("planning initiated")
     public void planningInitiated() {
-        WebElement planButton = driver.findElement(By.xpath("//*[@id=\"panel-context-view\"]/div/form/div[4]/input"));
-        // @FindBy(xpath = "//*[@id=\"panel-context-view\"]/div/form/div[4]/input")
-        //        WebElement planButton;
+        WebElement planButton = wait.until(driver -> driver.findElement(By.cssSelector("#panel-context-view > div > form > div.planner-button-container > input")));
         planButton.click();
+// Ha debug módban futtatom (tehát kézzel lököm tovább a 86-os sornál), akkor jól fut.
+// Sima futtatás esetén panaszkodik, hogy nem tudja a "Plan" gombot megkattintani. Ez mitől van?
     }
 
     @Then("calculated route is shown")
     public void calculatedRouteIsShown() {
-        WebElement itineraries = driver.findElement(By.className("noprint itineraries-container"));
-       //         WebElement itineraries;
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement itineraries = wait.until(driver -> driver.findElement(By.className("itineraries-container")));
         assertTrue(itineraries.isDisplayed());
 
 
@@ -111,7 +111,6 @@ public class routePlanningSteps {
         //</div>
 
     }
-
 
 
 }
